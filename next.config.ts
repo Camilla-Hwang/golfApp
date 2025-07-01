@@ -3,10 +3,23 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   images: {
-    domains: [
-      "static.wixstatic.com",
-      "www.changigolfclub.org.sg",
-      "www.orchidclub.com",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'static.wixstatic.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.changigolfclub.org.sg',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.orchidclub.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.palmresort.com',
+      },
     ],
   }
 };
