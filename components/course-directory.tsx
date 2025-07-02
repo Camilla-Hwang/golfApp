@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { LatLngBounds } from 'leaflet';
 import CourseCard, { GolfCourse } from './course-card';
 import MapSection from './map-section';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 interface Props {
   courses: GolfCourse[];

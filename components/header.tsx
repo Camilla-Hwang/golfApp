@@ -7,7 +7,7 @@ import Search from './search';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { Search as SearchIcon, X as CloseIcon } from 'lucide-react';
-import { NextLogo } from './next-logo';
+
 
 interface Props {
   states: string[];

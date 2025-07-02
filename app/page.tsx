@@ -5,12 +5,13 @@ import ClientOnlyCourseDirectory from "@/components/client-only-directory";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const resolvedSearchParams = await searchParams;
   const supabase = await createClient();
-  const country = searchParams.country || "Singapore";
-  const state = searchParams.state;
-  const search = searchParams.search;
+  const country = resolvedSearchParams.country || "Singapore";
+  const state = resolvedSearchParams.state;
+  const search = resolvedSearchParams.search;
 
   let query = supabase.from("golf_courses").select("*").order("name");
 
