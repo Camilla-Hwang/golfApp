@@ -46,6 +46,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.className} antialiased flex flex-col min-h-[calc(100vh-80px)]`}
+        suppressHydrationWarning
       >
         <ThemeProvider
           attribute="class"
