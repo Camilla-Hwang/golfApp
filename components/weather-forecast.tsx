@@ -29,18 +29,21 @@ export default function WeatherForecast({ lat, lon }: Props) {
   useEffect(() => {
     const fetchWeather = async () => {
       const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+      console.log("Weather API Key:", apiKey ? `****${apiKey.slice(-4)}` : apiKey);
+      console.log("Weather lat/lon:", lat, lon);
       if (!apiKey) {
         setError("Weather API key is not configured.");
         setLoading(false);
         return;
       }
-
+      const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&appid=${apiKey}&units=metric`;
+      console.log("Weather API URL:", url);
       try {
-        const res = await fetch(
-          `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&appid=${apiKey}&units=metric`
-        );
+        const res = await fetch(url);
         if (!res.ok) {
-          throw new Error("Failed to fetch weather data.");
+          const text = await res.text();
+          console.error("Weather API fetch failed:", res.status, res.statusText, text);
+          throw new Error(`Failed to fetch weather data. Status: ${res.status} ${res.statusText}. Response: ${text}`);
         }
         const data = await res.json();
         setForecast(data);
@@ -63,7 +66,7 @@ export default function WeatherForecast({ lat, lon }: Props) {
   }
 
   return (
-    <div className="mt-8 border-t pt-6">
+    <div className="border-t pt-6">
       <h2 className="text-2xl font-semibold mb-4">7-Day Forecast</h2>
       <div className="grid grid-cols-4 md:grid-cols-7 gap-2 text-center">
         {forecast?.daily.slice(0, 7).map((day, index) => (

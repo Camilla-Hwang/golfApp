@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
@@ -6,22 +6,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'static.wixstatic.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.changigolfclub.org.sg',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.orchidclub.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.palmresort.com',
+        hostname: 'eventpx.com',
       },
     ],
-  }
+  },
 };
 
 export default nextConfig;

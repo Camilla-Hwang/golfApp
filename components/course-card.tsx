@@ -6,7 +6,7 @@ export interface GolfCourse {
   id: string;
   name: string;
   country: string | null;
-  city: string | null;
+  state: string | null;
   latitude: number | null;
   longitude: number | null;
   holes: number | null;
@@ -20,11 +20,12 @@ export interface GolfCourse {
 
 interface Props {
   course: GolfCourse;
+  country: string;
 }
 
-export default function CourseCard({ course }: Props) {
+export default function CourseCard({ course, country }: Props) {
   return (
-    <Link href={`/course/${course.id}`} className="block group">
+    <Link href={`/course/${course.id}?country=${country}`} className="block group">
       <div className="w-full aspect-square relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
         {course.photo_url ? (
           <Image
@@ -42,7 +43,7 @@ export default function CourseCard({ course }: Props) {
       <div className="mt-2">
         <h3 className="font-semibold text-base truncate">{course.name}</h3>
         <p className="text-sm text-muted-foreground truncate">
-          {course.city}, {course.country}
+          {course.state ? `${course.state}, ${course.country}` : course.country}
         </p>
         {course.price && (
           <p className="text-sm font-medium mt-1">{course.price}</p>
