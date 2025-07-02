@@ -39,7 +39,7 @@ export default async function RootLayout({
   if (statesError) {
     console.error('Error fetching states:', statesError);
   } else {
-    states = [...new Set(statesData.map((item: any) => item.state))].sort();
+    states = [...new Set(statesData.map((item: { state: string }) => item.state))].sort();
   }
 
   return (
