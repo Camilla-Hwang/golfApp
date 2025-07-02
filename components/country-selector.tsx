@@ -1,28 +1,24 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+interface Props {
+  selectedCountry: string;
+  onCountryChange: (country: string) => void;
+}
 
-export default function CountrySelector() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const currentCountry = searchParams.get('country') || 'Singapore';
-
+export default function CountrySelector({ selectedCountry, onCountryChange }: Props) {
   const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCountry = e.target.value;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('country', newCountry);
-    router.push(`${pathname}?${params.toString()}`);
+    onCountryChange(e.target.value);
   };
 
   return (
     <select
-      value={currentCountry}
+      value={selectedCountry}
       onChange={handleCountryChange}
-      className="bg-gray-700 text-white rounded-md p-2"
+      className="bg-gray-700 text-white rounded-md p-2 pr-6"
     >
-      <option value="Singapore">Singapore</option>
+      <option value="">Countries</option>
       <option value="Malaysia">Malaysia</option>
+      <option value="Singapore">Singapore</option>
     </select>
   );
 }

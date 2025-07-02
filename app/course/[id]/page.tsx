@@ -20,7 +20,7 @@ export default async function CourseDetailPage({
   }
 
   return (
-    <main className="container mx-auto p-4 md:p-8">
+    <main className="container mx-auto px-4 md:px-8">
       <div className="max-w-4xl mx-auto">
         {course.photo_url && (
           <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden mb-8">
@@ -34,7 +34,7 @@ export default async function CourseDetailPage({
         )}
         <h1 className="text-4xl font-bold mb-2">{course.name}</h1>
         <p className="text-lg text-muted-foreground mb-6">
-          {course.city}, {course.country}
+          {course.state ? `${course.state}, ${course.country}` : course.country}
         </p>
 
         <div className="prose max-w-none">

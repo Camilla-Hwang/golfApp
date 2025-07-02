@@ -1,9 +1,9 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L, { LatLngExpression } from "leaflet";
+import L, { LatLngExpression, LatLngBounds } from "leaflet";
 import { type GolfCourse } from "@/components/course-card";
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 
 // Custom red dot icon
@@ -14,11 +14,52 @@ const redIcon = new L.Icon({
   popupAnchor: [0, -32],
 });
 
-interface Props {
-  courses: GolfCourse[];
+// This component handles auto-fitting the map to markers when results change
+function FitBoundsController({ courses }: { courses: GolfCourse[] }) {
+  const map = useMap();
+  useEffect(() => {
+    const markersWithCoords = courses.filter(c => c.latitude && c.longitude);
+    if (markersWithCoords.length > 0) {
+      const bounds = new L.LatLngBounds(markersWithCoords.map(c => [c.latitude as number, c.longitude as number]));
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [courses, map]);
+  return null;
 }
 
-export default function MapView({ courses }: Props) {
+// This component reports map movements back to the parent
+function MapEvents({ onBoundsChange, onUserMapInteraction }: { onBoundsChange: (bounds: LatLngBounds) => void, onUserMapInteraction?: () => void }) {
+  const hasUserInteracted = useRef(false);
+  const map = useMapEvents({
+    dragstart: () => {
+      hasUserInteracted.current = true;
+      if (onUserMapInteraction) onUserMapInteraction();
+    },
+    zoomstart: () => {
+      hasUserInteracted.current = true;
+      if (onUserMapInteraction) onUserMapInteraction();
+    },
+    moveend: () => {
+      if (hasUserInteracted.current) {
+        onBoundsChange(map.getBounds());
+      }
+    },
+    zoomend: () => {
+      if (hasUserInteracted.current) {
+        onBoundsChange(map.getBounds());
+      }
+    },
+  });
+  return null;
+}
+
+interface Props {
+  courses: GolfCourse[];
+  onBoundsChange?: (bounds: LatLngBounds) => void;
+  onUserMapInteraction?: () => void;
+}
+
+export default function MapView({ courses, onBoundsChange, onUserMapInteraction }: Props) {
   const center: LatLngExpression = [1.35, 103.82]; // Singapore rough center
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -57,7 +98,7 @@ export default function MapView({ courses }: Props) {
           <Popup>
             <div className="text-sm">
               <h3 className="font-semibold">{course.name}</h3>
-              <p className="text-muted-foreground">{course.city}</p>
+              <p className="text-muted-foreground">{course.state}</p>
               <Link href={`/course/${course.id}`} className="text-primary hover:underline mt-1 block">
                 View details &rarr;
               </Link>
@@ -65,6 +106,8 @@ export default function MapView({ courses }: Props) {
           </Popup>
         </Marker>
       ))}
+      <FitBoundsController courses={courses} />
+      {onBoundsChange && <MapEvents onBoundsChange={onBoundsChange} onUserMapInteraction={onUserMapInteraction} />}
     </MapContainer>
   );
 }
