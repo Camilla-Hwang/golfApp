@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import WeatherForecast from "@/components/weather-forecast";
 
 export default async function CourseDetailPage({
   params,
@@ -29,6 +28,8 @@ export default async function CourseDetailPage({
               src={course.photo_url}
               alt={course.name}
               fill
+              sizes="(max-width: 768px) 100vw, 1200px"
+              priority
               className="object-cover"
             />
           </div>
@@ -69,9 +70,7 @@ export default async function CourseDetailPage({
           </ul>
         </div>
 
-        {course.latitude && course.longitude && (
-          <WeatherForecast lat={course.latitude} lon={course.longitude} />
-        )}
+
       </div>
     </main>
   );
